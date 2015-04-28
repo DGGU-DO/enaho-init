@@ -1,26 +1,45 @@
 *Obtiene metadata de la base de datos ENAHO
-*V1.0
-*Test 
+*V1.1
+ 
 * Rutas
-global bd_yr = "2007"
-global basepath = "D:\BD_repo\ENAHO\"
+local bd_yr = "2007"
+local basepath = "D:\BD_repo\ENAHO\"
+local logpath = "D:\log_repo\ENAHO\"
+local reportpath = "D:\reports\ENAHO\"
 
 * Nombre de archivos
-global bd_vivienda = "enaho01-${bd_yr}-100.dta"
-global bd_miembros = "enaho01-${bd_yr}-200.dta"
-global bd_educacion = "enaho01-${bd_yr}-300.dta"
-global bd_salud = "enaho01-${bd_yr}-400.dta"
-global bd_ingresos = "enaho01-${bd_yr}-500.dta"
-global bd_equipo = "enaho01-${bd_yr}-612.dta"
-global bd_sumaria = "sumaria-${bd_yr}.dta"
-global bd_prog = "enaho01-${bd_yr}-700.dta"
+local bd_vivienda = "enaho01-`bd_yr'-100.dta"
+local bd_miembros = "enaho01-${bd_yr}-200.dta"
+local bd_educacion = "enaho01-${bd_yr}-300.dta"
+local bd_salud = "enaho01-${bd_yr}-400.dta"
+local bd_ingresos = "enaho01-${bd_yr}-500.dta"
+local bd_equipo = "enaho01-${bd_yr}-612.dta"
+local bd_sumaria = "sumaria-${bd_yr}.dta"
+local bd_prog = "enaho01-${bd_yr}-700.dta"
 
-*===============================
-* MODULOS A NIVEL DE INDIVIDUO
-*===============================
-*Luego se utilizarán los modulos a nivel de individual  (Modulo 2, 3, 4 y 5)
-cap log close
-*log using "$bases_intermedias\Log`ano'.log", replace
+* Inicializa log
+local c_date : di %tdYND date(c(current_date),"DMY")
+local c_time = c(current_time)
+local c_time_date = "`c_date'"+"-" +"`c_time'"
+local time_string = subinstr("`c_time_date'", ":", "_", .) 
+local time_string = subinstr("`time_string'", " ", "_", .)
+display "`time_string'"
+
+*log using `logpath'metadata-enaho`bd_yr'`time_string'.log, text
+
+* MODULO 1: VIVIENDA
+
+use "`basepath'\`bd_yr'\\`bd_vivienda'", clear
+describe, short
+describe, replace
+outsheet using "`reportpath'varrep_enaho`bd_yr'_m1_auto.csv", delimiter("|") replace
+use "`basepath'\`bd_yr'\\`bd_vivienda'", clear
+
+
+* Cierra log
+log close
+
+
 
 *------------------------------------
 * MODULO 2: MIEMBROS DEL HOGAR
