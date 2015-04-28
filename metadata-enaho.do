@@ -1,6 +1,6 @@
 *Obtiene metadata de la base de datos ENAHO
 *V1.0
-
+*Test 
 * Rutas
 global bd_yr = "2007"
 global basepath = "D:\BD_repo\ENAHO\"
